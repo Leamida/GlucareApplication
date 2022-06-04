@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#F47C7C</color>
+    <color name="secondary">#EF9F9F</color>
+    <color name="blood">#FF4E4E</color>
+    <color name="variant">#FAD4D4</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

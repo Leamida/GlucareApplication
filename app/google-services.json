@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "799435647275",
+    "project_id": "glucareapp",
+    "storage_bucket": "glucareapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799435647275:android:c6d26f58e4b875644bfd6e",
+        "android_client_info": {
+          "package_name": "com.example.glucareapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799435647275-0ge2va7k5oag69im4p1impuocs8j0e3v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.glucareapplication",
+            "certificate_hash": "aa3cd0d599da32c1cdf952fc9545421cdb8910d0"
+          }
+        },
+        {
+          "client_id": "799435647275-f5826jo1vijqjba5er5k7dmicaj8ecc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWLa_6J8FXq_ta6yceYLsrRVR2ERAPqhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799435647275-f5826jo1vijqjba5er5k7dmicaj8ecc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
