@@ -1,14 +1,17 @@
 package com.example.glucareapplication.ui.scan
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.glucareapplication.databinding.FragmentScanBinding
+import com.example.glucareapplication.ui.scan.camera.CameraActivity
+import com.example.glucareapplication.ui.scan.camera.PreviewImageActivity
+import com.example.glucareapplication.ui.user.profile.ProfileActivity
 
 class ScanFragment : Fragment() {
 
@@ -23,17 +26,19 @@ class ScanFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(ScanViewModel::class.java)
-
         _binding = FragmentScanBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            btnScan.setOnClickListener{
+                startActivity(Intent(activity, PreviewImageActivity::class.java))
+            }
         }
-        return root
+
     }
 
     override fun onDestroyView() {

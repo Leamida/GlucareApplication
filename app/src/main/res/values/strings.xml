@@ -6,4 +6,9 @@
     <string name="offer">Enjoy variety of health services and the convenience of checking blood sugar levels.</string>
     <string name="your_web_client_id">799435647275-f5826jo1vijqjba5er5k7dmicaj8ecc6.apps.googleusercontent.com</string>
     <string name="title_user">User</string>
+    <string name="image">image capture</string>
+    <string name="camera_flip">flip camera</string>
+    <string name="failed_getting_image">failed when getting image</string>
+    <string name="cant_get_permission">cant get permission</string>
+    <string name="failed_launch_camera">failed when start camera</string>
 </resources>
