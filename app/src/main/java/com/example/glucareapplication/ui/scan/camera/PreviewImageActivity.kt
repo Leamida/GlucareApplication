@@ -5,16 +5,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.glucareapplication.R
 import com.example.glucareapplication.core.line_chart.utils.UriTo.Companion.rotateBitmap
 import com.example.glucareapplication.databinding.ActivityPreviewImageBinding
-import com.example.glucareapplication.databinding.ActivityProfileBinding
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -76,9 +76,10 @@ class PreviewImageActivity : AppCompatActivity() {
         if (it.resultCode == CAMERA_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-
+            val croppedImage = it.data?.getByteArrayExtra("croppedImage") as ByteArray
+            val bmp = BitmapFactory.decodeByteArray(croppedImage, 0, croppedImage.size)
             val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
+                bmp,
                 isBackCamera
             )
             getFile = myFile

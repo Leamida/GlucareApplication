@@ -1,10 +1,14 @@
 package com.example.glucareapplication.ui.scan.camera;
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -18,6 +22,7 @@ import androidx.core.content.ContextCompat
 import com.example.glucareapplication.R;
 import com.example.glucareapplication.core.line_chart.utils.UriTo
 import com.example.glucareapplication.databinding.ActivityCameraBinding
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -56,6 +61,34 @@ class CameraActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
+    private fun cropImage(bitmap: Bitmap, frame: View, reference: View): ByteArray {
+        val heightOriginal = frame.height
+        val widthOriginal = frame.width
+        val heightFrame = reference.height
+        val widthFrame = reference.width
+        val leftFrame = reference.left
+        val topFrame = reference.top
+        val heightReal = bitmap.height
+        val widthReal = bitmap.width
+        val widthFinal = widthFrame * widthReal / widthOriginal / 3
+        val heightFinal = heightFrame * heightReal / heightOriginal
+        val leftFinal = leftFrame * widthReal / widthOriginal / 6 * 10
+        val topFinal = topFrame * heightReal / heightOriginal
+        val bitmapFinal = Bitmap.createBitmap(
+            bitmap,
+            leftFinal, topFinal, widthFinal, heightFinal
+        )
+
+        val stream = ByteArrayOutputStream()
+        bitmapFinal.compress(
+            Bitmap.CompressFormat.JPEG,
+            100,
+            stream
+        ) //100 is the best quality possible
+        return stream.toByteArray()
+    }
+
+
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
@@ -76,6 +109,12 @@ class CameraActivity : AppCompatActivity() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val intent = Intent()
+                    val croppedImage = cropImage(
+                        BitmapFactory.decodeFile(photoFile.path),
+                        binding.viewFinder,
+                        binding.imageView
+                    )
+                    intent.putExtra("croppedImage", croppedImage)
                     intent.putExtra("picture", photoFile)
                     intent.putExtra(
                         "isBackCamera",

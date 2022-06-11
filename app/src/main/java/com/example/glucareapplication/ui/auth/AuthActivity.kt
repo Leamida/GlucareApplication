@@ -101,7 +101,7 @@ class AuthActivity : AppCompatActivity() {
                     // Got an ID token from Google. Use it to authenticate
                     // with your backend.
                     updateUI(idToken)
-                    Log.d(TAG, "Got ID token.")
+                    Log.d(TAG, "Got ID token. $idToken")
                 }
                 else -> {
                     // Shouldn't happen.
