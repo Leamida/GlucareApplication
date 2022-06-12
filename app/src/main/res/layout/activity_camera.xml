@@ -26,11 +26,11 @@
         app:srcCompat="@drawable/ic_ant_design_camera_filled"
         android:contentDescription="@string/camera_flip" />
 
-    <ImageView
-        android:id="@+id/imageView"
+    <View
+        android:id="@+id/vPlaceholder"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/ic_mdi_scan_helper"
+        android:background="@drawable/ic_mdi_scan_helper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

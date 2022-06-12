@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.glucareapplication.MainActivity
 import com.example.glucareapplication.R
 import com.example.glucareapplication.databinding.ActivityAuthBinding
+import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -25,11 +26,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
+    private lateinit var userPreferences: UserPreferences
     private lateinit var auth: FirebaseAuth
     private var showOneTapUI = true
 
@@ -44,7 +51,7 @@ class AuthActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
         auth = Firebase.auth
-
+        userPreferences = UserPreferences(applicationContext)
         oneTapClient = Identity.getSignInClient(this)
         signInRequest = BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
@@ -100,6 +107,9 @@ class AuthActivity : AppCompatActivity() {
                 idToken != null -> {
                     // Got an ID token from Google. Use it to authenticate
                     // with your backend.
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userPreferences.setToken(idToken)
+                    }
                     updateUI(idToken)
                     Log.d(TAG, "Got ID token. $idToken")
                 }

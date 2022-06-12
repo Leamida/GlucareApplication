@@ -7,102 +7,148 @@
     android:padding="25dp"
     tools:context=".ui.dashboard.DashboardFragment">
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/oswald_bold"
-        android:text="Label_Name"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivUser" />
-
-    <TextView
-        android:id="@+id/tvGreeting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/oswald_regular"
-        android:text="Label_Greeting"
-        android:textColor="@color/primary"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivUser"
-        app:layout_constraintStart_toStartOf="@+id/tvName"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
-
-    <ImageView
-        android:id="@+id/ivUser"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="30dp"
-        app:cardCornerRadius="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGreeting">
-
+        android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/variant"
-            android:padding="20dp">
-
+            android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/tvAsk"
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/oswald_bold"
-                android:text="Feel Dizzy?"
-                android:textSize="24dp"
+                android:text="Label_Name"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/ivUser" />
 
             <TextView
-                android:id="@+id/tvAnswer"
+                android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/oswald_regular"
-                android:text="Maybe your blood sugar is not normal"
-                android:textSize="18dp"
-                app:layout_constraintStart_toStartOf="@+id/tvAsk"
-                app:layout_constraintTop_toBottomOf="@+id/tvAsk" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnScan"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/oswald_regular"
-                android:text="Check Now"
-                android:textStyle="bold"
-                app:cornerRadius="25dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:text="Label_Greeting"
+                android:textColor="@color/primary"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/ivUser"
+                app:layout_constraintStart_toStartOf="@+id/tvName"
+                app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
             <ImageView
+                android:id="@+id/ivUser"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                app:cardElevation = "2dp"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvGreeting">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/variant"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvAsk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/oswald_bold"
+                        android:text="Feel Dizzy?"
+                        android:textSize="24dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvAnswer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/oswald_regular"
+                        android:text="Maybe your blood sugar is not normal"
+                        android:textSize="18dp"
+                        app:layout_constraintStart_toStartOf="@+id/tvAsk"
+                        app:layout_constraintTop_toBottomOf="@+id/tvAsk" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnScan"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/oswald_regular"
+                        android:text="Check Now"
+                        android:textStyle="bold"
+                        app:cornerRadius="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_facepalming"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_facepalming"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/oswald_bold"
+                android:text="Today's Scan"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+            <ProgressBar
+                android:visibility="invisible"
+                android:id="@+id/pbGlucoseHistories"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/rvContainer"
+                app:layout_constraintEnd_toEndOf="@+id/rvContainer"
+                app:layout_constraintStart_toStartOf="@+id/rvContainer"
+                app:layout_constraintTop_toTopOf="@+id/rvContainer" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rvContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="500dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="25dp"
+                app:cardElevation = "2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvGlucoseHistory"
+                    android:padding="15dp"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/card_layout"/>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/oswald_bold"
-        android:text="Today's Scan"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

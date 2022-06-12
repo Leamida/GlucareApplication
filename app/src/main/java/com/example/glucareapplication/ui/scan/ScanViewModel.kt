@@ -3,11 +3,17 @@ package com.example.glucareapplication.ui.scan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.glucareapplication.core.util.Result
+import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
+import com.example.glucareapplication.feature.glucose.domain.use_case.GetGlucoseHistoryUseCase
+import com.example.glucareapplication.feature.glucose.domain.use_case.PostPredictUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.MultipartBody
+import javax.inject.Inject
 
-class ScanViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
+@HiltViewModel
+class ScanViewModel @Inject constructor(
+    private val postPredictUseCase: PostPredictUseCase
+) : ViewModel() {
+    fun postPredict(user:String,file: MultipartBody.Part) : LiveData<Result<PredictResponse>> = postPredictUseCase(user,file)
 }

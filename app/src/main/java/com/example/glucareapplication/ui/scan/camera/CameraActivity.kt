@@ -3,23 +3,20 @@ package com.example.glucareapplication.ui.scan.camera;
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.util.Log
+import android.os.Bundle
+import android.util.Rational
+import android.view.Surface
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-
-import com.example.glucareapplication.R;
+import com.example.glucareapplication.R
 import com.example.glucareapplication.core.line_chart.utils.UriTo
 import com.example.glucareapplication.databinding.ActivityCameraBinding
 import java.io.ByteArrayOutputStream
@@ -39,6 +36,7 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         binding.btnCaptureImage.setOnClickListener { takePhoto() }
@@ -48,6 +46,7 @@ class CameraActivity : AppCompatActivity() {
                 else CameraSelector.DEFAULT_BACK_CAMERA
             startCamera()
         }
+
     }
 
     public override fun onResume() {
@@ -61,31 +60,26 @@ class CameraActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
-    private fun cropImage(bitmap: Bitmap, frame: View, reference: View): ByteArray {
-        val heightOriginal = frame.height
-        val widthOriginal = frame.width
-        val heightFrame = reference.height
-        val widthFrame = reference.width
-        val leftFrame = reference.left
-        val topFrame = reference.top
-        val heightReal = bitmap.height
-        val widthReal = bitmap.width
-        val widthFinal = widthFrame * widthReal / widthOriginal / 3
-        val heightFinal = heightFrame * heightReal / heightOriginal
-        val leftFinal = leftFrame * widthReal / widthOriginal / 6 * 10
-        val topFinal = topFrame * heightReal / heightOriginal
-        val bitmapFinal = Bitmap.createBitmap(
-            bitmap,
-            leftFinal, topFinal, widthFinal, heightFinal
-        )
+    private fun cropImage(bitmap: Bitmap, cameraFrame: View, cropRectFrame: View): Bitmap {
+        val scaleFactor: Double; val widthOffset: Double; val heightOffset: Double
 
-        val stream = ByteArrayOutputStream()
-        bitmapFinal.compress(
-            Bitmap.CompressFormat.JPEG,
-            100,
-            stream
-        ) //100 is the best quality possible
-        return stream.toByteArray()
+        if (cameraFrame.height * bitmap.width > cameraFrame.height * bitmap.width) {
+            scaleFactor = (bitmap.width).toDouble() / (cameraFrame.width).toDouble()
+            widthOffset = 0.0
+            heightOffset = (bitmap.height - cameraFrame.height * scaleFactor) / 2
+        } else {
+            scaleFactor = (bitmap.height).toDouble() / (cameraFrame.height).toDouble()
+            widthOffset = (bitmap.width - cameraFrame.width * scaleFactor) / 2
+            heightOffset = 0.0
+        }
+
+        val newX = cropRectFrame.left * scaleFactor + widthOffset
+        val newY = cropRectFrame.top * scaleFactor + heightOffset
+        val width = cropRectFrame.width * scaleFactor
+        val height = cropRectFrame.height * scaleFactor
+
+        return Bitmap.createBitmap(bitmap, (newX).toInt(), (newY).toInt(), (width).toInt(), (height).toInt())
+
     }
 
 
@@ -112,7 +106,7 @@ class CameraActivity : AppCompatActivity() {
                     val croppedImage = cropImage(
                         BitmapFactory.decodeFile(photoFile.path),
                         binding.viewFinder,
-                        binding.imageView
+                        binding.vPlaceholder
                     )
                     intent.putExtra("croppedImage", croppedImage)
                     intent.putExtra("picture", photoFile)
