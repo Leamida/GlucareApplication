@@ -1,5 +1,6 @@
 package com.example.glucareapplication.ui.scan.result
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import com.example.glucareapplication.databinding.ActivityScanResultBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
 import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
 import com.example.glucareapplication.ui.scan.ScanViewModel
+import com.example.glucareapplication.ui.scan.camera.CameraActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +37,11 @@ class ScanResultActivity : AppCompatActivity() {
                 decodedByte
             )
             tvResult.text = data.result
+            btnReCheck.setOnClickListener {
+                val intent = Intent(this@ScanResultActivity, CameraActivity::class.java)
+                startActivity(intent)
+                this@ScanResultActivity.finish()
+            }
         }
 
         val timer = object: CountDownTimer(5000, 1000) {
