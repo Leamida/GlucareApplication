@@ -5,6 +5,7 @@ import com.example.glucareapplication.feature.glucose.data.source.api.ModelDocto
 import com.example.glucareapplication.feature.glucose.data.source.api.ModelPatientApiService
 import com.example.glucareapplication.feature.glucose.domain.model.HistoriesResponse
 import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
+import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
 import com.example.glucareapplication.feature.glucose.domain.repository.GlucoseRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -24,5 +25,13 @@ class GlucoseRepositoryImpl @Inject constructor(
         } else {
             modelDoctorApiService.postPredict(file)
         }
+    }
+
+    override suspend fun postSavePredict(
+        token: String,
+        image: String,
+        result: String
+    ): SavePredictResponse {
+        return glucoseApiService.postSavePredict(token, image, result)
     }
 }

@@ -7,16 +7,43 @@
     android:padding="25dp"
     tools:context=".ui.scan.camera.PreviewImageActivity">
 
-    <ImageView
-        android:id="@+id/ivPreviewImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/image"
-        android:src="@drawable/ic_ant_design_camera_filled"
-        app:layout_constraintBottom_toTopOf="@+id/btnCamera"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/rvContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="500dp"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnCheck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivPreviewImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:src="@drawable/ic_ant_design_camera_filled"
+            app:layout_constraintBottom_toTopOf="@+id/btnCamera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:visibility="invisible"
+        android:id="@+id/pbImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="@+id/rvContainer"
+        app:layout_constraintStart_toStartOf="@+id/rvContainer"
+        app:layout_constraintTop_toBottomOf="@+id/rvContainer" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCamera"

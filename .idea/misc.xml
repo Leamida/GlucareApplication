@@ -16,7 +16,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_preview_image.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_scan_result.xml" value="0.18840579710144928" />
+        <entry key="app/src/main/res/layout/activity_scan_result.xml" value="0.25" />
         <entry key="app/src/main/res/layout/card_layout.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2" />

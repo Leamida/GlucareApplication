@@ -6,32 +6,27 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import com.example.glucareapplication.R
-import com.example.glucareapplication.core.line_chart.utils.UriTo.Companion.rotateBitmap
 import com.example.glucareapplication.core.util.Result
 import com.example.glucareapplication.databinding.ActivityPreviewImageBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
-import com.example.glucareapplication.ui.dashboard.DashboardViewModel
 import com.example.glucareapplication.ui.scan.ScanViewModel
+import com.example.glucareapplication.ui.scan.result.ScanResultActivity
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class PreviewImageActivity : AppCompatActivity() {
@@ -93,15 +88,8 @@ class PreviewImageActivity : AppCompatActivity() {
     ) {
         if (it.resultCode == CAMERA_RESULT) {
             val myFile = it.data?.getSerializableExtra("picture") as File
-            val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-            val croppedImage = it.data?.getByteArrayExtra("croppedImage") as ByteArray
-            val bmp = BitmapFactory.decodeByteArray(croppedImage, 0, croppedImage.size)
-            val result = rotateBitmap(
-                bmp,
-                isBackCamera
-            )
+            val result = BitmapFactory.decodeFile(myFile.path)
             getFile = myFile
-
             binding.ivPreviewImage.setImageBitmap(result)
         }
     }
@@ -109,7 +97,7 @@ class PreviewImageActivity : AppCompatActivity() {
     private fun postPredict() {
 
         getFile?.let {
-            reduceFileImage(it)
+
             val requestImageFile = it.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "file",
@@ -118,42 +106,31 @@ class PreviewImageActivity : AppCompatActivity() {
             )
 
             userPreferences.getUser().asLiveData().observe(this) { user ->
-                scanViewModel.postPredict(user, imageMultipart).observe(this) { result ->
+                scanViewModel.postPredict("Bearer ${user[1]}", user[0], imageMultipart).observe(this) { result ->
                     when (result) {
                         is Result.Loading -> {
-                            Toast.makeText(this, "Loading", Toast.LENGTH_SHORT).show()
+                            binding.pbImage.visibility = View.VISIBLE
+                            binding.btnCamera.visibility = View.INVISIBLE
+                            binding.btnCheck.visibility = View.INVISIBLE
                         }
                         is Result.Success -> {
-
-                            Toast.makeText(this, result.data.predictEye.toString(), Toast.LENGTH_LONG).show()
+                            val intent = Intent(this,ScanResultActivity::class.java)
+                            intent.putExtra("data",result.data)
+                            startActivity(intent)
+                            this.finish()
                         }
                         is Result.Error -> {
-                            Log.d(TAG,"error ${result.error}")
-                            Toast.makeText(this, "error ${result.error}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "failed when processing image, Try again!", Toast.LENGTH_LONG).show()
+                            this.finish()
                         }
                     }
                 }
             }
-        }?: Toast.makeText(
+        } ?: Toast.makeText(
             this,
             "Please Take Picture first!!!",
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun reduceFileImage(file: File): File {
-        val bitmap = BitmapFactory.decodeFile(file.path)
-        var compressQuality = 100
-        var streamLength: Int
-        do {
-            val bmpStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
-            val bmpPicByteArray = bmpStream.toByteArray()
-            streamLength = bmpPicByteArray.size
-            compressQuality -= 5
-        } while (streamLength > 1000000)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
-        return file
     }
 
     override fun onDestroy() {

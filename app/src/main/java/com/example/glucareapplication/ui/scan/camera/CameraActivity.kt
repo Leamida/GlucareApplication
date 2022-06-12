@@ -1,13 +1,12 @@
 package com.example.glucareapplication.ui.scan.camera;
 
+import android.R.attr
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Point
+import android.media.ExifInterface
 import android.os.Build
 import android.os.Bundle
-import android.util.Rational
-import android.view.Surface
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -16,12 +15,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import com.example.glucareapplication.R
 import com.example.glucareapplication.core.line_chart.utils.UriTo
 import com.example.glucareapplication.databinding.ActivityCameraBinding
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 class CameraActivity : AppCompatActivity() {
 
@@ -60,7 +62,7 @@ class CameraActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
-    private fun cropImage(bitmap: Bitmap, cameraFrame: View, cropRectFrame: View): Bitmap {
+    private fun cropImage(bitmap: Bitmap, cameraFrame: View, cropRectFrame: View,): ByteArray {
         val scaleFactor: Double; val widthOffset: Double; val heightOffset: Double
 
         if (cameraFrame.height * bitmap.width > cameraFrame.height * bitmap.width) {
@@ -77,8 +79,16 @@ class CameraActivity : AppCompatActivity() {
         val newY = cropRectFrame.top * scaleFactor + heightOffset
         val width = cropRectFrame.width * scaleFactor
         val height = cropRectFrame.height * scaleFactor
+        val bmc = Bitmap.createBitmap(bitmap, (newX).toInt(), (newY).toInt(), (width).toInt(), (height).toInt())
+        val rotateBmc = UriTo.rotateBitmap(bmc,cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
 
-        return Bitmap.createBitmap(bitmap, (newX).toInt(), (newY).toInt(), (width).toInt(), (height).toInt())
+        val stream = ByteArrayOutputStream()
+        rotateBmc.compress(
+            Bitmap.CompressFormat.JPEG,
+            100,
+            stream
+        ) //100 is the best quality possible
+        return stream.toByteArray()
 
     }
 
@@ -103,17 +113,19 @@ class CameraActivity : AppCompatActivity() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val intent = Intent()
+
                     val croppedImage = cropImage(
                         BitmapFactory.decodeFile(photoFile.path),
                         binding.viewFinder,
                         binding.vPlaceholder
                     )
-                    intent.putExtra("croppedImage", croppedImage)
+                    val overWrite = FileOutputStream(photoFile, false)
+
+                    overWrite.write(croppedImage)
+                    overWrite.flush()
+                    overWrite.close()
+                    BitmapFactory.decodeByteArray(croppedImage, 0, croppedImage.size)
                     intent.putExtra("picture", photoFile)
-                    intent.putExtra(
-                        "isBackCamera",
-                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
-                    )
                     setResult(PreviewImageActivity.CAMERA_RESULT, intent)
                     finish()
                 }

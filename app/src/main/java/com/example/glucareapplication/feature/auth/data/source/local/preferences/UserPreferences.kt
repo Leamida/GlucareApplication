@@ -36,8 +36,11 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    override fun getUser(): Flow<String> = userDataStore.data.map {
-        it[USER] ?: ""
+    override fun getUser(): Flow<List<String>> = userDataStore.data.map {
+       listOf(
+           it[USER] ?: "",
+           it[USER_TOKEN] ?: ""
+       )
     }
 
     override suspend fun setUser(user: String?) {

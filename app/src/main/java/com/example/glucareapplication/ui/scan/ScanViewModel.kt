@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.glucareapplication.core.util.Result
 import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
+import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
 import com.example.glucareapplication.feature.glucose.domain.use_case.GetGlucoseHistoryUseCase
 import com.example.glucareapplication.feature.glucose.domain.use_case.PostPredictUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,5 +16,5 @@ import javax.inject.Inject
 class ScanViewModel @Inject constructor(
     private val postPredictUseCase: PostPredictUseCase
 ) : ViewModel() {
-    fun postPredict(user:String,file: MultipartBody.Part) : LiveData<Result<PredictResponse>> = postPredictUseCase(user,file)
-}
+    fun postPredict(token: String,user:String,file: MultipartBody.Part) : LiveData<Result<SavePredictResponse>> = postPredictUseCase(token,user,file)
+    }

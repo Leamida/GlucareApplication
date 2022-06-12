@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +16,7 @@ import com.example.glucareapplication.core.util.Result
 import com.example.glucareapplication.databinding.FragmentDashboardBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
 import com.example.glucareapplication.ui.dashboard.adapter.HistoriesAdapter
+import com.example.glucareapplication.ui.scan.ScanViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -72,7 +74,11 @@ class DashboardFragment : Fragment() {
                         CoroutineScope(Dispatchers.IO).launch {
                             userPreferences.setUser(result.data.user)
                         }
-                        binding.rvGlucoseHistory.adapter = HistoriesAdapter(result.data.predictResults)
+                        if (result.data.predictResults.isEmpty()){
+                            binding.tvNoData.visibility = View.VISIBLE
+                        }else{
+                            binding.rvGlucoseHistory.adapter = HistoriesAdapter(result.data.predictResults)
+                        }
                     }
                     is Result.Error -> {
                         binding.pbGlucoseHistories.visibility = View.INVISIBLE
@@ -81,8 +87,6 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
-
-
         Glide.with(requireActivity())
             .load(auth.currentUser?.photoUrl)
             .circleCrop()
