@@ -25,7 +25,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
-@AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -53,7 +52,10 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvGlucoseHistory.layoutManager = LinearLayoutManager(context)
 
-
+        binding.apply {
+            tvName.text = "Hi, " + auth.currentUser?.displayName
+            tvGreeting.text = "How are you feeling today?"
+        }
         userPreferences.getToken().asLiveData().observe(viewLifecycleOwner) {
             dashboardViewModel.getHistories("Bearer $it").observe(viewLifecycleOwner) { result ->
                 when (result) {
@@ -67,19 +69,6 @@ class DashboardFragment : Fragment() {
                         binding.apply {
                             pbGlucoseHistories.visibility = View.INVISIBLE
                             rvContainer.visibility = View.VISIBLE
-                        }
-                        if (result.data.user == "doctor" || result.data.user == "Doctor") {
-                            binding.apply {
-                                cardContainer.visibility = View.GONE
-                                tvName.text = "Hi, Dr." + auth.currentUser?.displayName
-                                tvGreeting.text = "How are you feeling today?"
-
-                            }
-                        }else{
-                            binding.apply {
-                                tvName.text = "Hi, " + auth.currentUser?.displayName
-                                tvGreeting.text = "How are you feeling today?"
-                            }
                         }
                         CoroutineScope(Dispatchers.IO).launch {
                             userPreferences.setUser(result.data.user)

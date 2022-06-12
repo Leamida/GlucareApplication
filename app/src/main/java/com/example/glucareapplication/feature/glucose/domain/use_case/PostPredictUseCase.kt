@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.glucareapplication.core.util.Result
-import com.example.glucareapplication.feature.glucose.data.repository.GlucoseRepositoryImpl
-import com.example.glucareapplication.feature.glucose.domain.model.HistoriesResponse
-import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
 import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
 import com.example.glucareapplication.feature.glucose.domain.repository.GlucoseRepository
 import okhttp3.MultipartBody
@@ -24,16 +21,29 @@ class PostPredictUseCase @Inject constructor(
         liveData {
             emit(Result.Loading)
             try {
-                val predictResponse = glucoseRepository.postPredict(user, file)
-               if (predictResponse.imageEye.isEmpty()){
-                   Result.Error("Failed when processing image.")
-               }else{
-                   val savePredictResponse = glucoseRepository.postSavePredict(token,predictResponse.imageEye,predictResponse.predictEye[0])
-                   _predictResponse.value = savePredictResponse
-                   val tempData: LiveData<Result<SavePredictResponse>> =
-                       _predictResponse.map { map -> Result.Success(map) }
-                   emitSource(tempData)
-               }
+                if (user == "patient"){
+                   val predictResponse = glucoseRepository.postPredict(file)
+                    if (predictResponse.imageEye.isEmpty()){
+                        Result.Error("Failed when processing image.")
+                    }else{
+                        val savePredictResponse = glucoseRepository.postSavePredict(token,predictResponse.imageEye,predictResponse.predictEye[0])
+                        _predictResponse.value = savePredictResponse
+                        val tempData: LiveData<Result<SavePredictResponse>> =
+                            _predictResponse.map { map -> Result.Success(map) }
+                        emitSource(tempData)
+                    }
+                }else{
+                    val predictResponse = glucoseRepository.postDoctorPredict(file)
+                    if (predictResponse.imageEye.isEmpty()){
+                        Result.Error("Failed when processing image.")
+                    }else{
+                        val savePredictResponse = glucoseRepository.postSavePredict(token,predictResponse.imageEye,predictResponse.predictEye[0])
+                        _predictResponse.value = savePredictResponse
+                        val tempData: LiveData<Result<SavePredictResponse>> =
+                            _predictResponse.map { map -> Result.Success(map) }
+                        emitSource(tempData)
+                    }
+                }
             } catch (e: HttpException) {
                 emit(Result.Error(e.localizedMessage ?: "An unexpected error occurred"))
             } catch (e: IOException) {

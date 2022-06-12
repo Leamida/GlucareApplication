@@ -4,6 +4,7 @@ import com.example.glucareapplication.feature.glucose.data.source.api.GlucoseApi
 import com.example.glucareapplication.feature.glucose.data.source.api.ModelDoctorApiService
 import com.example.glucareapplication.feature.glucose.data.source.api.ModelPatientApiService
 import com.example.glucareapplication.feature.glucose.domain.model.HistoriesResponse
+import com.example.glucareapplication.feature.glucose.domain.model.PredictDoctorResponse
 import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
 import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
 import com.example.glucareapplication.feature.glucose.domain.repository.GlucoseRepository
@@ -19,12 +20,12 @@ class GlucoseRepositoryImpl @Inject constructor(
         return glucoseApiService.getHistories(token)
     }
 
-    override suspend fun postPredict(user: String, file: MultipartBody.Part): PredictResponse {
-        return if (user == "patient") {
-            modelPatientApiService.postPredict(file)
-        } else {
-            modelDoctorApiService.postPredict(file)
-        }
+    override suspend fun postPredict(file: MultipartBody.Part): PredictResponse {
+            return modelPatientApiService.postPredict(file)
+    }
+
+    override suspend fun postDoctorPredict(file: MultipartBody.Part): PredictDoctorResponse {
+        return modelDoctorApiService.postPredict(file)
     }
 
     override suspend fun postSavePredict(

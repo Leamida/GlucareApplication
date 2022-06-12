@@ -1,12 +1,9 @@
 package com.example.glucareapplication.ui.scan
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.glucareapplication.core.util.Result
-import com.example.glucareapplication.feature.glucose.domain.model.PredictResponse
 import com.example.glucareapplication.feature.glucose.domain.model.SavePredictResponse
-import com.example.glucareapplication.feature.glucose.domain.use_case.GetGlucoseHistoryUseCase
 import com.example.glucareapplication.feature.glucose.domain.use_case.PostPredictUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MultipartBody

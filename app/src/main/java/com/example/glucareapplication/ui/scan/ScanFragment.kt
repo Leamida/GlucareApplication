@@ -18,9 +18,6 @@ import com.example.glucareapplication.ui.user.profile.ProfileActivity
 class ScanFragment : Fragment() {
 
     private var _binding: FragmentScanBinding? = null
-    private lateinit var userPreferences: UserPreferences
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -29,21 +26,12 @@ class ScanFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScanBinding.inflate(inflater, container, false)
-        userPreferences = UserPreferences(requireActivity().applicationContext)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userPreferences.getUser().asLiveData().observe(viewLifecycleOwner){user->
-            if (user[0]=="doctor" || user[0]=="Doctor"){
-                binding.apply {
-                    tvAsk.text = "scan glucose x-ray document and \nshare the result with \nyour patient"
-                    tvAnswer.visibility = View.GONE
-                }
-            }
-        }
         binding.apply {
             btnScan.setOnClickListener{
                 startActivity(Intent(activity, PreviewImageActivity::class.java))
