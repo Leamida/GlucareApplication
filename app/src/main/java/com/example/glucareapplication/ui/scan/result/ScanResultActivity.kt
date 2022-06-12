@@ -3,6 +3,7 @@ package com.example.glucareapplication.ui.scan.result
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Base64
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -18,6 +19,7 @@ import com.example.glucareapplication.feature.glucose.domain.model.SavePredictRe
 import com.example.glucareapplication.ui.scan.ScanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Error
+import kotlin.concurrent.timer
 
 @AndroidEntryPoint
 class ScanResultActivity : AppCompatActivity() {
@@ -44,22 +46,17 @@ class ScanResultActivity : AppCompatActivity() {
             )
             tvResult.text = data.result
         }
-//        userPreferences.getToken().asLiveData().observe(this) { token->
-//            scanViewModel.postSavePredict("Bearer $token", data.imageEye, data.predictEye[0]).observe(this) { result->
-//                when(result){
-//                    is Result.Loading->{
-//                        Toast.makeText(this,"loading",Toast.LENGTH_SHORT).show()
-//                    }
-//                    is Result.Success->{
-//
-//
-//                    }
-//                    is Result.Error->{
-//                        Toast.makeText(this,result.error,Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//            }
-//        }
+
+        val timer = object: CountDownTimer(5000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.tvTime.text = millisUntilFinished.toString()
+            }
+
+            override fun onFinish() {
+                this@ScanResultActivity.finish()
+            }
+        }
+        timer.start()
     }
 
     override fun onDestroy() {
