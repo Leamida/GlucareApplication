@@ -39,7 +39,9 @@ class ScanResultActivity : AppCompatActivity() {
 
         val timer = object: CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                binding.tvTime.text = (millisUntilFinished/1000).toString()
+                if (_binding!=null){
+                    binding.tvTime.text = (millisUntilFinished/1000).toString()
+                }
             }
 
             override fun onFinish() {
@@ -47,6 +49,11 @@ class ScanResultActivity : AppCompatActivity() {
             }
         }
         timer.start()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        this@ScanResultActivity.finish()
     }
 
     override fun onDestroy() {
