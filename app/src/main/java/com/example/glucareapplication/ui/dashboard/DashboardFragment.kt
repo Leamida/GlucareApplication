@@ -1,11 +1,15 @@
 package com.example.glucareapplication.ui.dashboard
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
@@ -17,6 +21,8 @@ import com.example.glucareapplication.databinding.FragmentDashboardBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
 import com.example.glucareapplication.ui.dashboard.adapter.HistoriesAdapter
 import com.example.glucareapplication.ui.scan.ScanViewModel
+import com.example.glucareapplication.ui.scan.camera.CameraActivity
+import com.example.glucareapplication.ui.scan.camera.PreviewImageActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -53,9 +59,15 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvGlucoseHistory.layoutManager = LinearLayoutManager(context)
 
+
         binding.apply {
             tvName.text = "Hi, " + auth.currentUser?.displayName
             tvGreeting.text = "How are you feeling today?"
+            btnScan.setOnClickListener{
+//                startActivity(Intent(activity, PreviewImageActivity::class.java))
+                val intent = Intent(requireContext(), CameraActivity::class.java)
+                startActivity(intent)
+            }
         }
         userPreferences.getToken().asLiveData().observe(viewLifecycleOwner) {
             dashboardViewModel.getHistories("Bearer $it").observe(viewLifecycleOwner) { result ->

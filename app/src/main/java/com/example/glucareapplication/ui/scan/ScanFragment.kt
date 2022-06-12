@@ -34,7 +34,8 @@ class ScanFragment : Fragment() {
 
         binding.apply {
             btnScan.setOnClickListener{
-                startActivity(Intent(activity, PreviewImageActivity::class.java))
+                val intent = Intent(requireContext(), CameraActivity::class.java)
+                startActivity(intent)
             }
         }
 

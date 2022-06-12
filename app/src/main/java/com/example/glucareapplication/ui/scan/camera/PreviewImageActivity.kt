@@ -35,67 +35,24 @@ class PreviewImageActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private lateinit var userPreferences: UserPreferences
     private val scanViewModel: ScanViewModel by viewModels()
-
     private var getFile: File? = null
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (!allPermissionsGranted()) {
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.cant_get_permission),
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityPreviewImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userPreferences = UserPreferences(applicationContext)
-        if (!allPermissionsGranted()) {
-            ActivityCompat.requestPermissions(
-                this,
-                REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS
-            )
-        }
 
-        binding.apply {
-            btnCamera.setOnClickListener { startCamera() }
-            btnCheck.setOnClickListener { postPredict() }
-        }
-    }
+        supportActionBar?.hide()
 
-    private fun startCamera() {
-        val intent = Intent(this, CameraActivity::class.java)
-        launcherIntentCamera.launch(intent)
-    }
+        val myFile = intent.getSerializableExtra("picture") as File
+        val result = BitmapFactory.decodeFile(myFile.path)
+        getFile = myFile
+        binding.ivPreviewImage.setImageBitmap(result)
+        postPredict()
 
-    private val launcherIntentCamera = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == CAMERA_RESULT) {
-            val myFile = it.data?.getSerializableExtra("picture") as File
-            val result = BitmapFactory.decodeFile(myFile.path)
-            getFile = myFile
-            binding.ivPreviewImage.setImageBitmap(result)
-        }
     }
 
     private fun postPredict() {
-
         getFile?.let {
 
             val requestImageFile = it.asRequestBody("image/jpeg".toMediaTypeOrNull())
@@ -138,10 +95,4 @@ class PreviewImageActivity : AppCompatActivity() {
         _binding = null
     }
 
-    companion object {
-        const val CAMERA_RESULT = 200
-        private const val TAG = "PreviewImageActivity"
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
-    }
 }

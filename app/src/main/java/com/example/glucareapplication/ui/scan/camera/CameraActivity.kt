@@ -112,7 +112,7 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val intent = Intent()
+                    val intent = Intent(this@CameraActivity,PreviewImageActivity::class.java)
 
                     val croppedImage = cropImage(
                         BitmapFactory.decodeFile(photoFile.path),
@@ -126,7 +126,7 @@ class CameraActivity : AppCompatActivity() {
                     overWrite.close()
                     BitmapFactory.decodeByteArray(croppedImage, 0, croppedImage.size)
                     intent.putExtra("picture", photoFile)
-                    setResult(PreviewImageActivity.CAMERA_RESULT, intent)
+                    startActivity(intent)
                     finish()
                 }
             }
