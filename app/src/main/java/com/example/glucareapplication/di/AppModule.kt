@@ -21,7 +21,7 @@ import javax.inject.Singleton
 object AppModule {
 
     var BASE_URL = "http://34.123.109.98/"
-    var MODEL_DOCTOR_URL = "https://doctor-v4fexjqj4q-et.a.run.app"
+    var MODEL_DOCTOR_URL = "https://appdoctor-v4fexjqj4q-et.a.run.app"
     var MODEL_PATIENT_URL = "https://mata-v4fexjqj4q-et.a.run.app"
 
     @Provides

@@ -1,8 +1,7 @@
 package com.example.glucareapplication.ui.scan.camera
 
-import android.Manifest
+import android.R.attr.bitmap
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -10,13 +9,9 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.asLiveData
-import com.example.glucareapplication.R
 import com.example.glucareapplication.core.util.Result
 import com.example.glucareapplication.databinding.ActivityPreviewImageBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences
@@ -26,7 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
+
 
 @AndroidEntryPoint
 class PreviewImageActivity : AppCompatActivity() {
@@ -45,25 +42,33 @@ class PreviewImageActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         val myFile = intent.getSerializableExtra("picture") as File
-        val result = BitmapFactory.decodeFile(myFile.path)
+
         getFile = myFile
-        binding.ivPreviewImage.setImageBitmap(result)
+
         postPredict()
 
     }
 
     private fun postPredict() {
         getFile?.let {
-
+            val result = BitmapFactory.decodeFile(it.path)
+            binding.ivPreviewImage.setImageBitmap(result)
             val requestImageFile = it.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "file",
                 it.name,
                 requestImageFile
             )
+            val stream = ByteArrayOutputStream()
+            result.compress(
+                Bitmap.CompressFormat.JPEG,
+                100,
+                stream
+            )
+            val encoded = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT)
 
             userPreferences.getUser().asLiveData().observe(this) { user ->
-                scanViewModel.postPredict("Bearer ${user[1]}", user[0], imageMultipart).observe(this) { result ->
+                scanViewModel.postPredict("Bearer ${user[1]}", user[0],encoded, imageMultipart).observe(this) { result ->
                     when (result) {
                         is Result.Loading -> {
                             binding.pbImage.visibility = View.VISIBLE

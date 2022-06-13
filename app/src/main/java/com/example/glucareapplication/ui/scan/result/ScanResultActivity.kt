@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Base64
+import android.util.Log
 import androidx.activity.viewModels
 import com.example.glucareapplication.databinding.ActivityScanResultBinding
 import com.example.glucareapplication.feature.auth.data.source.local.preferences.UserPreferences

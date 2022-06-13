@@ -17,7 +17,7 @@ class PostPredictUseCase @Inject constructor(
 ) {
 
     private val _predictResponse = MutableLiveData<SavePredictResponse>()
-    operator fun invoke(token:String, user: String, file: MultipartBody.Part): LiveData<Result<SavePredictResponse>> =
+    operator fun invoke(token:String, user: String,image:String, file: MultipartBody.Part): LiveData<Result<SavePredictResponse>> =
         liveData {
             emit(Result.Loading)
             try {
@@ -34,10 +34,10 @@ class PostPredictUseCase @Inject constructor(
                     }
                 }else{
                     val predictResponse = glucoseRepository.postDoctorPredict(file)
-                    if (predictResponse.imageEye.isEmpty()){
+                    if (predictResponse.predictEye.isEmpty()){
                         Result.Error("Failed when processing image.")
                     }else{
-                        val savePredictResponse = glucoseRepository.postSavePredict(token,predictResponse.imageEye,predictResponse.predictEye[0])
+                        val savePredictResponse = glucoseRepository.postSavePredict(token,image,predictResponse.predictEye[0])
                         _predictResponse.value = savePredictResponse
                         val tempData: LiveData<Result<SavePredictResponse>> =
                             _predictResponse.map { map -> Result.Success(map) }

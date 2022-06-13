@@ -13,5 +13,5 @@ import javax.inject.Inject
 class ScanViewModel @Inject constructor(
     private val postPredictUseCase: PostPredictUseCase
 ) : ViewModel() {
-    fun postPredict(token: String,user:String,file: MultipartBody.Part) : LiveData<Result<SavePredictResponse>> = postPredictUseCase(token,user,file)
+    fun postPredict(token: String,image:String,user:String,file: MultipartBody.Part) : LiveData<Result<SavePredictResponse>> = postPredictUseCase(token,image,user,file)
     }
